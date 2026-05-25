@@ -1,0 +1,41 @@
+// markdownlint config - .jsonc supports // comments
+// See: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+{
+    "default": true,
+
+    // line-length: too noisy for prose
+    "MD013": false,
+
+    // allow duplicate headings only across sibling sections
+    "MD024": { "siblings_only": true },
+    "MD025": { "front_matter_title": "" },
+
+    // allow inline HTML (README uses centered block)
+    "MD033": false,
+
+    // first line h1: README starts with HTML
+    "MD041": false,
+
+    // emphasis-as-heading: we use bold lead-ins
+    "MD036": false,
+
+    // fenced code language label not required everywhere
+    "MD040": false,
+
+    // mixed code-block style ok
+    "MD046": false,
+
+    // blanks-around-* rules: noisy in dense docs
+    "MD022": false,
+    "MD031": false,
+    "MD032": false,
+
+    // allow trailing period in some headlines
+    "MD026": false,
+
+    // README has anchor links that lint flags
+    "MD042": false,
+
+    // README intro skips h2 by design
+    "MD001": false
+}

@@ -1,0 +1,8 @@
+{
+    "kiroAgent.agentAutonomy": "Autopilot",
+    "kiroAgent.trustedTools": ["*"],
+    "kiroAgent.trustedCommands": ["*"],
+    "files.autoSave": "afterDelay",
+    "kiroAgent.enableTabAutocomplete": true,
+    "kiroAgent.enableCodebaseIndexing": true
+}

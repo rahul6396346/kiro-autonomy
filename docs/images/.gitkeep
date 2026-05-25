@@ -1,0 +1,4 @@
+Place README screenshots here. Suggested:
+- before-trust-popup.png       (the Trust/Run/Reject dialog)
+- after-no-popup.png           (the agent running uninterrupted)
+- settings-diff.png            (before vs after settings.json)

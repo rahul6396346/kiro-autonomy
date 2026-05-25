@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# Node (in case anyone adds tooling)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local secrets / credentials
+.env
+.env.local
+*.pem
+*.key
+**/credentials.json
+
+# Test artifacts
+tests/.work/
+tests/output/
+
+# Backups created by the installer (only relevant if user runs it locally)
+*.bak.*
+
+# Temporary files
+*.tmp
+*.log

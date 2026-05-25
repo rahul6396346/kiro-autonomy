@@ -1,0 +1,24 @@
+{
+    "kiroAgent.agentAutonomy": "Supervised",
+    "kiroAgent.trustedTools": [
+        "read_file",
+        "read_files",
+        "list_directory",
+        "grep_search",
+        "file_search",
+        "remote_web_search",
+        "web_fetch"
+    ],
+    "kiroAgent.trustedCommands": [
+        "node --version",
+        "npm --version",
+        "python --version",
+        "git status",
+        "git diff",
+        "dir",
+        "type *",
+        "Get-ChildItem"
+    ],
+    "files.autoSave": "afterDelay",
+    "kiroAgent.terminalCommandTimeout": 60000
+}

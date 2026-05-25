@@ -1,0 +1,29 @@
+{
+    "kiroAgent.agentAutonomy": "Autopilot",
+    "kiroAgent.trustedTools": ["*"],
+    "kiroAgent.trustedCommands": [
+        "node *", "npm *", "npx *", "pnpm *", "yarn *", "bun *",
+        "python *", "py *", "pip *", "uv *", "uvx *", "poetry *",
+        "go *", "cargo *", "rustc *",
+        "java *", "javac *", "mvn *", "gradle *",
+        "dotnet *", "make *", "cmake *",
+
+        "git status", "git status -s", "git diff", "git diff --cached",
+        "git log", "git log --oneline -20", "git show", "git branch",
+        "git add *", "git commit *", "git pull", "git fetch",
+        "git checkout *", "git switch *", "git stash", "git stash *",
+
+        "dir", "dir *", "type *", "where *", "echo *", "cls",
+        "Get-ChildItem *", "Get-Content *", "Select-String *",
+        "ls *", "cat *", "grep *", "find *", "head *", "tail *",
+
+        "docker *", "kubectl *", "terraform *",
+        "curl *", "wget *", "ping *", "nslookup *",
+
+        "tsc *", "eslint *", "prettier *", "vitest *", "jest *", "pytest *"
+    ],
+    "files.autoSave": "afterDelay",
+    "kiroAgent.enableTabAutocomplete": true,
+    "kiroAgent.enableCodebaseIndexing": true,
+    "kiroAgent.terminalCommandTimeout": 120000
+}

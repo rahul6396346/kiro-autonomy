@@ -1,0 +1,7 @@
+{
+    "_comment_": "Drop this in <project>/.vscode/settings.json to lock down a sensitive workspace even when your global settings trust everything. Workspace settings beat user settings.",
+
+    "kiroAgent.agentAutonomy": "Supervised",
+    "kiroAgent.trustedTools": [],
+    "kiroAgent.trustedCommands": []
+}
