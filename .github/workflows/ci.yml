@@ -156,43 +156,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Test python3 fallback (without jq on PATH)
+      - name: Disable jq for this job
+        run: |
+          # Hide jq so the installer's `have jq` check fails and falls back to python3
+          if command -v jq >/dev/null 2>&1; then
+            sudo mv "$(command -v jq)" "$(command -v jq).disabled"
+          fi
+          # Verify
+          if command -v jq >/dev/null 2>&1; then
+            echo "FAIL: jq is still on PATH"
+            exit 1
+          fi
+          command -v python3
+      - name: Test python3 fallback
         shell: bash
         run: |
           set -euo pipefail
           chmod +x scripts/enable-kiro-autonomy.sh
-          # Build a minimal PATH that has python3 but no jq
-          MIN_PATH="/usr/bin:/bin:/usr/local/bin"
-          # Find where python3 lives so we know it stays on PATH
-          PY_DIR=$(dirname "$(command -v python3)")
-          case ":$MIN_PATH:" in
-            *":$PY_DIR:"*) ;;
-            *) MIN_PATH="$PY_DIR:$MIN_PATH" ;;
-          esac
-          # Now strip every dir that contains jq from MIN_PATH
-          CLEAN_PATH=""
-          IFS=':'
-          for d in $MIN_PATH; do
-            if [[ -n "$d" && ! -x "$d/jq" ]]; then
-              if [[ -z "$CLEAN_PATH" ]]; then CLEAN_PATH="$d"; else CLEAN_PATH="$CLEAN_PATH:$d"; fi
-            fi
-          done
-          unset IFS
-          export PATH="$CLEAN_PATH"
-          # Verify the sabotage
-          echo "PATH=$PATH"
-          if command -v jq >/dev/null 2>&1; then
-            echo "FAIL: jq still on PATH at $(command -v jq)"
-            exit 1
-          fi
-          if ! command -v python3 >/dev/null 2>&1; then
-            echo "FAIL: python3 not on PATH"
-            exit 1
-          fi
           WORK=$(mktemp -d)
           SETTINGS="$WORK/settings.json"
           ./scripts/enable-kiro-autonomy.sh --settings-path "$SETTINGS" --recipe maximum --quiet
-          # Verify with python (jq is unavailable here on purpose)
           python3 - "$SETTINGS" <<'PY'
           import json, sys
           d = json.load(open(sys.argv[1]))
@@ -202,3 +185,9 @@ jobs:
           print('python3 fallback: ok')
           PY
           rm -rf "$WORK"
+      - name: Restore jq
+        if: always()
+        run: |
+          if [[ -e /usr/bin/jq.disabled ]]; then
+            sudo mv /usr/bin/jq.disabled /usr/bin/jq
+          fi
