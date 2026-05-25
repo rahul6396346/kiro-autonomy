@@ -161,26 +161,44 @@ jobs:
         run: |
           set -euo pipefail
           chmod +x scripts/enable-kiro-autonomy.sh
-          # Strip jq off PATH for this test to force the python fallback
-          NO_JQ_PATH="/tmp/no-jq-bin"
-          mkdir -p "$NO_JQ_PATH"
-          # Filter PATH to only known dirs, exclude any path that might contain jq
-          export PATH="$NO_JQ_PATH:/usr/bin:/bin"
-          # If jq is somehow still found, alias it to false
+          # Build a minimal PATH that has python3 but no jq
+          MIN_PATH="/usr/bin:/bin:/usr/local/bin"
+          # Find where python3 lives so we know it stays on PATH
+          PY_DIR=$(dirname "$(command -v python3)")
+          case ":$MIN_PATH:" in
+            *":$PY_DIR:"*) ;;
+            *) MIN_PATH="$PY_DIR:$MIN_PATH" ;;
+          esac
+          # Now strip every dir that contains jq from MIN_PATH
+          CLEAN_PATH=""
+          IFS=':'
+          for d in $MIN_PATH; do
+            if [[ -n "$d" && ! -x "$d/jq" ]]; then
+              if [[ -z "$CLEAN_PATH" ]]; then CLEAN_PATH="$d"; else CLEAN_PATH="$CLEAN_PATH:$d"; fi
+            fi
+          done
+          unset IFS
+          export PATH="$CLEAN_PATH"
+          # Verify the sabotage
+          echo "PATH=$PATH"
           if command -v jq >/dev/null 2>&1; then
-            cp /usr/bin/false "$NO_JQ_PATH/jq" 2>/dev/null || true
-            chmod +x "$NO_JQ_PATH/jq" 2>/dev/null || true
+            echo "FAIL: jq still on PATH at $(command -v jq)"
+            exit 1
+          fi
+          if ! command -v python3 >/dev/null 2>&1; then
+            echo "FAIL: python3 not on PATH"
+            exit 1
           fi
           WORK=$(mktemp -d)
           SETTINGS="$WORK/settings.json"
           ./scripts/enable-kiro-autonomy.sh --settings-path "$SETTINGS" --recipe maximum --quiet
-          # Use python to verify because jq might be sabotaged
-          python3 -c "
+          # Verify with python (jq is unavailable here on purpose)
+          python3 - "$SETTINGS" <<'PY'
           import json, sys
           d = json.load(open(sys.argv[1]))
-          assert d['kiroAgent.agentAutonomy']    == 'Autopilot'
-          assert d['kiroAgent.trustedTools']     == ['*']
-          assert d['kiroAgent.trustedCommands']  == ['*']
+          assert d['kiroAgent.agentAutonomy']    == 'Autopilot',    d
+          assert d['kiroAgent.trustedTools']     == ['*'],          d
+          assert d['kiroAgent.trustedCommands']  == ['*'],          d
           print('python3 fallback: ok')
-          " "$SETTINGS"
+          PY
           rm -rf "$WORK"
