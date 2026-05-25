@@ -13,7 +13,7 @@ jobs:
     name: Validate example settings JSON
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Validate JSON
         run: |
           set -e
@@ -26,7 +26,7 @@ jobs:
     name: Lint Markdown
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: '20'
@@ -39,7 +39,7 @@ jobs:
     name: Lint shell scripts
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run shellcheck
         run: |
           sudo apt-get update -y
@@ -50,7 +50,7 @@ jobs:
     name: Lint PowerShell
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run PSScriptAnalyzer
         shell: pwsh
         run: |
@@ -71,7 +71,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Run installer test suite
         shell: pwsh
         run: ./tests/Test-Script.ps1
@@ -84,7 +84,7 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install jq
         shell: bash
         run: |
@@ -155,7 +155,7 @@ jobs:
     name: Smoke test (bash + python3 fallback, no jq)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Disable jq for this job
         run: |
           # Hide jq so the installer's `have jq` check fails and falls back to python3
